@@ -1,11 +1,15 @@
 #' Create dependency graph data
 #'
-#' With a configured entry point, traverse dependencies and reverse usages as in
-#' a rooted graph, retaining direction-specific edge colours and line styles.
+#' Without a root, the graph includes all tables selected by the configuration
+#' and the foreign keys between them. With a root, the graph follows dependencies
+#' and reverse usages from that table. Configured leaf tables are included when
+#' reached and traversal stops at them.
 #'
-#' @param model A `dbschema_model`.
-#' @param config An [atlas_report_config()] object.
-#' @return A list with `nodes` and `edges` data tables.
+#' @param model A [dbschema_model-class] object.
+#' @param config An [atlas_report_config-class] object.
+#' @return A list with `nodes` and `edges` data tables. Node IDs are fully qualified
+#'   table names. Edges carry the source and target IDs, ordered key columns, and
+#'   direction-specific colors and line styles.
 #' @export
 dependency_graph_data <- function(model, config = atlas_report_config()) {
   model <- validate_model(model)
@@ -23,6 +27,7 @@ dependency_graph_data <- function(model, config = atlas_report_config()) {
     if (!root %in% tables$table_id) stop("Unknown graph entry point: ", root, call. = FALSE)
     visited <- character()
     traversed <- list()
+    # Record edges reached from the root while stopping at already visited or leaf tables.
     walk <- function(current) {
       if (current %in% visited || current %in% config$graph_standalone_tables) return(invisible(NULL))
       visited <<- c(visited, current)
@@ -45,6 +50,7 @@ dependency_graph_data <- function(model, config = atlas_report_config()) {
     ids <- unique(c(root, dependencies$table_id, dependencies$target_table_id))
     tables <- tables[table_id %in% ids]
   }
+  # Use the first configured group containing the schema, or the schema name itself.
   group_for_schema <- function(schema) {
     groups <- names(config$schema_groups)[vapply(config$schema_groups, function(values) schema %in% values, logical(1L))]
     if (length(groups)) groups[[1L]] else schema
@@ -65,13 +71,77 @@ dependency_graph_data <- function(model, config = atlas_report_config()) {
   list(nodes = nodes, edges = edges)
 }
 
-# Convert model records to the row-oriented payload used by the graph details panel.
+#' Create an interactive dependency graph
+#'
+#' Includes a two-panel layout, node navigation, neighbourhood highlighting,
+#' and a details panel showing descriptions, column flags, dependencies and usages.
+#' [render_schema_report()] can save the widget as a separate HTML file.
+#'
+#' @param model A [dbschema_model-class] object from [build_schema_model()].
+#' @param config An [atlas_report_config-class] object defining the selected
+#'   schemas, graph root, and presentation settings.
+#' @return A `visNetwork` htmlwidget with its details panel and embedded presentation assets.
+#' @export
+dependency_graph <- function(model, config = atlas_report_config()) {
+  data <- dependency_graph_data(model, config)
+  graph <- visNetwork::visNetwork(data$nodes, data$edges, width = "100%", height = "85vh")
+  graph <- visNetwork::visNodes(graph, shape = "dot", size = 20, borderWidth = 1,
+                               borderWidthSelected = 5,
+                               color = list(border = "#A0A0A0", highlight = list(border = "#222222")))
+  graph <- visNetwork::visEdges(graph, arrows = list(to = list(enabled = TRUE)), length = 200,
+                               smooth = TRUE, font = list(align = "bottom", size = 14))
+  graph <- visNetwork::visPhysics(graph, solver = "barnesHut",
+    stabilization = list(enabled = TRUE, iterations = 1000),
+    barnesHut = list(gravitationalConstant = -8000, springLength = 180,
+                    springConstant = 0.04, damping = 0.09))
+  graph <- visNetwork::visInteraction(graph, navigationButtons = TRUE, dragNodes = TRUE, zoomView = TRUE)
+  if (requireNamespace("rmarkdown", quietly = TRUE)) {
+    graph$dependencies <- c(graph$dependencies, list(rmarkdown::html_dependency_bootstrap("flatly")))
+  }
+  graph <- visNetwork::visEvents(graph,
+    afterDrawing = "function() { window.myNetwork = this; }",
+    selectNode = "function(properties) { if (properties.nodes.length) window.location.hash = properties.nodes[0]; }",
+    deselectNode = "function() { window.location.hash = ''; }")
+  style <- paste(readLines(template_path(config, "graph_style", "graph.css"),
+                           warn = FALSE, encoding = "UTF-8"), collapse = "\n")
+  graph <- htmlwidgets::prependContent(graph,
+    htmltools::tags$style(htmltools::HTML(style)),
+    htmltools::tags$header(class = "atlas-graph-header",
+      htmltools::tags$h1(class = "title", config$title),
+      htmltools::tags$h3(class = "subtitle", paste("Last updated:", format(Sys.time(), "%d %B %Y %H:%M %Z"))),
+      if (!is.null(config$author)) htmltools::tags$h4(class = "author", config$author)))
+  legend_schemas <- unique(model$tables[table_id %in% data$nodes$id, schema])
+  graph <- htmlwidgets::appendContent(graph,
+    graph_legend(config, legend_schemas),
+    htmltools::tags$div(class = "details-panel",
+      htmltools::tags$h2("Table details"),
+      htmltools::tags$div(id = "table-details", class = "details",
+        htmltools::tags$p("Select a node in the graph."))))
+  script <- template_path(config, "graph_script", "graph.js")
+  if (!file.exists(script)) stop("Graph script not found: ", script, call. = FALSE)
+  htmlwidgets::onRender(graph, paste(readLines(script, warn = FALSE, encoding = "UTF-8"), collapse = "\n"),
+                        data = graph_table_details(model, config, data$nodes$id))
+}
+
+# Internal helpers
+
+#' Prepare table metadata for the graph widget's details panel
+#'
+#' @param model Validated schema model containing the graph's tables.
+#' @param config Report configuration with link callbacks.
+#' @param ids Fully qualified IDs of the tables shown in the graph.
+#' @return Row-oriented columns, dependencies, usages and descriptions keyed by
+#'   table ID. Reverse usages are restricted to nodes in the graph.
+#' @keywords internal
 graph_table_details <- function(model, config, ids) {
+  # Convert each data-table row to a list for the widget's JavaScript payload.
   rows <- function(data) lapply(seq_len(nrow(data)), function(i) as.list(data[i]))
+  # Return column flags in the same order as the relationship's key columns.
   flags <- function(schema_name, table_name, names, flag) {
     columns <- model$columns[schema == schema_name & table == table_name]
     unname(columns[[flag]][match(names, columns$column)])
   }
+  # Use graph node anchors for local links and a named browser target for external links.
   link <- function(schema_name, table_name, id) {
     value <- config$link_url(schema_name, table_name, id)
     if (grepl("href=['\"]#", value)) {
@@ -115,7 +185,12 @@ graph_table_details <- function(model, config, ids) {
   result
 }
 
-# Native disclosure legend; colours come from the same configuration as the nodes.
+#' Build the interactive graph's legend
+#'
+#' @param config Report configuration controlling schema colors and labels.
+#' @param schemas Schema names represented by graph nodes.
+#' @return An HTML details element explaining node colors, edge types and column flags.
+#' @keywords internal
 graph_legend <- function(config, schemas) {
   tags <- htmltools::tags
   node_items <- lapply(schemas, function(schema) {
@@ -139,53 +214,4 @@ graph_legend <- function(config, schemas) {
       tags$ul(
         tags$li(tags$span(class = "legend-edge dependency"), "Dependency"),
         tags$li(tags$span(class = "legend-edge usage"), "Usage (reverse lookup)"))))
-}
-
-#' Create an interactive dependency graph
-#'
-#' Includes a two-panel layout, node navigation, neighbourhood highlighting,
-#' and a details panel showing descriptions, column flags, dependencies and usages.
-#'
-#' @inheritParams dependency_graph_data
-#' @return A `visNetwork` htmlwidget with its details panel and embedded presentation assets.
-#' @export
-dependency_graph <- function(model, config = atlas_report_config()) {
-  data <- dependency_graph_data(model, config)
-  graph <- visNetwork::visNetwork(data$nodes, data$edges, width = "100%", height = "85vh")
-  graph <- visNetwork::visNodes(graph, shape = "dot", size = 20, borderWidth = 1,
-                               borderWidthSelected = 5,
-                               color = list(border = "#A0A0A0", highlight = list(border = "#222222")))
-  graph <- visNetwork::visEdges(graph, arrows = list(to = list(enabled = TRUE)), length = 200,
-                               smooth = TRUE, font = list(align = "bottom", size = 14))
-  graph <- visNetwork::visPhysics(graph, solver = "barnesHut",
-    stabilization = list(enabled = TRUE, iterations = 1000),
-    barnesHut = list(gravitationalConstant = -8000, springLength = 180,
-                    springConstant = 0.04, damping = 0.09))
-  graph <- visNetwork::visInteraction(graph, navigationButtons = TRUE, dragNodes = TRUE, zoomView = TRUE)
-  if (requireNamespace("rmarkdown", quietly = TRUE)) {
-    graph$dependencies <- c(graph$dependencies, list(rmarkdown::html_dependency_bootstrap("flatly")))
-  }
-  graph <- visNetwork::visEvents(graph,
-    afterDrawing = "function() { window.myNetwork = this; }",
-    selectNode = "function(properties) { if (properties.nodes.length) window.location.hash = properties.nodes[0]; }",
-    deselectNode = "function() { window.location.hash = ''; }")
-  style <- paste(readLines(template_path(config, "graph_style", "graph.css"),
-                           warn = FALSE, encoding = "UTF-8"), collapse = "\n")
-  graph <- htmlwidgets::prependContent(graph,
-    htmltools::tags$style(htmltools::HTML(style)),
-    htmltools::tags$header(class = "atlas-graph-header",
-      htmltools::tags$h1(class = "title", config$title),
-      htmltools::tags$h3(class = "subtitle", paste("Last updated:", format(Sys.time(), "%d %B %Y %H:%M %Z"))),
-      if (!is.null(config$author)) htmltools::tags$h4(class = "author", config$author)))
-  legend_schemas <- unique(model$tables[table_id %in% data$nodes$id, schema])
-  graph <- htmlwidgets::appendContent(graph,
-    graph_legend(config, legend_schemas),
-    htmltools::tags$div(class = "details-panel",
-      htmltools::tags$h2("Table details"),
-      htmltools::tags$div(id = "table-details", class = "details",
-        htmltools::tags$p("Select a node in the graph."))))
-  script <- template_path(config, "graph_script", "graph.js")
-  if (!file.exists(script)) stop("Graph script not found: ", script, call. = FALSE)
-  htmlwidgets::onRender(graph, paste(readLines(script, warn = FALSE, encoding = "UTF-8"), collapse = "\n"),
-                        data = graph_table_details(model, config, data$nodes$id))
 }
