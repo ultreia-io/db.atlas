@@ -38,7 +38,7 @@ install.packages("pak")
 pak::pak("ultreia-io/db.atlas")
 ```
 
-The package declares `dbiutils` through `Remotes`, so GitHub Actions and
+The package declares `db.tools` through `Remotes`, so GitHub Actions and
 local package installers can resolve it without absolute paths.
 
 ## Offline usage
@@ -81,11 +81,11 @@ render_schema_report(model, config)
 generate_report_indexes(config$output_directory)
 ```
 
-## `dbiutils` dependency
+## `db.tools` dependency
 
-The package delegates query execution to `dbiutils::db_query()`,
-connection ownership to `dbiutils::with_db_connection()`, and packaged
-SQL loading to `dbiutils::read_sql_file()`. It does not duplicate those
+The package delegates query execution to `db.tools::db_query()`,
+connection ownership to `db.tools::with_db_connection()`, and packaged
+SQL loading to `db.tools::read_sql_file()`. It does not duplicate those
 helpers and imports no database driver.
 
 ## Development
@@ -105,4 +105,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) and
 ## License
 
 GNU Lesser General Public License, version 2.1 (LGPL-2.1), matching
-`dbiutils`. See [LICENSE](LICENSE).
+`db.tools`. See [LICENSE](LICENSE).

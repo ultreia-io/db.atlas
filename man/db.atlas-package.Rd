@@ -8,8 +8,8 @@
 \description{
 Extract PostgreSQL metadata through application-supplied connection providers,
 save and load snapshots, inspect dependencies, and render neutral reports.
-The package uses \code{\link[dbiutils:db_query]{dbiutils::db_query()}},
-\code{\link[dbiutils:with_db_connection]{dbiutils::with_db_connection()}}, and \code{\link[dbiutils:read_sql_file]{dbiutils::read_sql_file()}} for its
+The package uses \code{\link[db.tools:db_query]{db.tools::db_query()}},
+\code{\link[db.tools:with_db_connection]{db.tools::with_db_connection()}}, and \code{\link[db.tools:read_sql_file]{db.tools::read_sql_file()}} for its
 low-level DBI work and does not import a database driver.
 }
 \seealso{

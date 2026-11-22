@@ -15,10 +15,10 @@ URL: https://ultreia-io.github.io/db.atlas/,
 BugReports: https://github.com/ultreia-io/db.atlas/issues
 Encoding: UTF-8
 Depends: R (>= 4.0.0)
-Imports: data.table, DBI, DT, dbiutils (>= 0.1.0), htmltools, htmlwidgets,
+Imports: data.table, DBI, DT, db.tools (>= 0.1.0), htmltools, htmlwidgets,
     visNetwork, whisker
 Suggests: covr, knitr, pkgdown, rmarkdown, RSQLite, testthat (>= 3.0.0), withr
-Remotes: ultreia-io/dbiutils
+Remotes: ultreia-io/db.tools
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3

@@ -1,22 +1,22 @@
 # Maintainer development guide
 
-Development follows the same Gitflow model as `dbiutils`: `develop` is the
+Development follows the same Gitflow model as `db.tools`: `develop` is the
 default integration branch, `main` is production, and releases use
 `release/*` or `hotfix/*` branches through the Perform Release workflow.
 
 ## Local dependencies
 
-Install `dbiutils` from GitHub without committing a local path:
+Install `db.tools` from GitHub without committing a local path:
 
 ```r
-pak::pak("ultreia-io/dbiutils")
+pak::pak("ultreia-io/db.tools")
 ```
 
 For sibling-repository development only, install it explicitly in your local
 library before loading this package:
 
 ```r
-devtools::install("../dbiutils", upgrade = "never")
+devtools::install("../db.tools", upgrade = "never")
 ```
 
 ## Validation
@@ -47,5 +47,5 @@ For the first release, the workflow creates `main` from the validated release ca
 
 The repository owner has confirmed that the incoming ROS implementation was
 never released and authorizes `db.atlas` under LGPL-2.1, matching
-`dbiutils`. Keep `DESCRIPTION`, `LICENSE`, README, and release metadata
+`db.tools`. Keep `DESCRIPTION`, `LICENSE`, README, and release metadata
 consistent with that license.

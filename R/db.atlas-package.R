@@ -2,8 +2,8 @@
 #'
 #' Extract PostgreSQL metadata through application-supplied connection providers,
 #' save and load snapshots, inspect dependencies, and render neutral reports.
-#' The package uses [dbiutils::db_query()],
-#' [dbiutils::with_db_connection()], and [dbiutils::read_sql_file()] for its
+#' The package uses [db.tools::db_query()],
+#' [db.tools::with_db_connection()], and [db.tools::read_sql_file()] for its
 #' low-level DBI work and does not import a database driver.
 #'
 #' @import data.table

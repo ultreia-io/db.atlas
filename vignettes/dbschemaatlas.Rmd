@@ -35,7 +35,7 @@ metadata <- extract_schema_metadata(c("public", "audit"), provider)
 ```
 
 Internally, connection ownership, query execution, and SQL reading are
-delegated to `dbiutils`.
+delegated to `db.tools`.
 
 ## Save and load metadata offline
 
