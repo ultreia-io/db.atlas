@@ -1,8 +1,8 @@
-Package: dbschemaatlas
+Package: db.atlas
 Title: Reusable Database Schema Metadata and Reports
 Version: 0.2.2
 Authors@R:
-    person(given = "Tony", family = "Chemit", role = c("aut", "cre"),
+    person("Tony", "Chemit", role = c("aut", "cre"),
            email = "tchemit@users.noreply.github.com")
 Description: Extracts PostgreSQL schema metadata through application-supplied
     DBI connections, persists portable metadata snapshots, builds dependency
@@ -10,37 +10,18 @@ Description: Extracts PostgreSQL schema metadata through application-supplied
     dependency graphs. Database drivers and application branding remain the
     responsibility of consuming applications.
 License: LGPL-2.1
-URL: https://ultreia-io.github.io/dbschemaatlas/,
-    https://github.com/ultreia-io/dbschemaatlas
-BugReports: https://github.com/ultreia-io/dbschemaatlas/issues
+URL: https://ultreia-io.github.io/db.atlas/,
+    https://github.com/ultreia-io/db.atlas
+BugReports: https://github.com/ultreia-io/db.atlas/issues
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-Depends:
-    R (>= 4.0.0)
-Imports:
-    data.table,
-    DBI,
-    DT,
-    dbiutils (>= 0.1.0),
-    htmltools,
-    htmlwidgets,
-    visNetwork,
-    whisker
-Suggests:
-    covr,
-    knitr,
-    pkgdown,
-    rmarkdown,
-    RSQLite,
-    testthat (>= 3.0.0),
-    withr
+Depends: R (>= 4.0.0)
+Imports: data.table, DBI, DT, dbiutils (>= 0.1.0), htmltools, htmlwidgets,
+    visNetwork, whisker
+Suggests: covr, knitr, pkgdown, rmarkdown, RSQLite, testthat (>= 3.0.0), withr
+Remotes: ultreia-io/dbiutils
 VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
-Config/Needs/coverage:
-    covr,
-    xml2
-Config/Needs/website:
-    pkgdown
-Config/roxygen2/version: 8.1.0
-Remotes:
-    ultreia-io/dbiutils
+Config/Needs/coverage: covr, xml2
+Config/Needs/website: pkgdown
+Config/roxygen2/version: 8.1.1

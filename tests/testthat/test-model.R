@@ -25,8 +25,8 @@ test_that("empty metadata produces a valid empty model", {
     schemas_description = data.table::data.table(schema = character(), description = character()),
     tables_description = data.table::data.table(schema = character(), table = character(), description = character()),
     tables_columns = data.table::data.table(schema = character(), table = character(), column = character(), type = character(), mandatory = character(), description = character()),
-    tables_foreign_keys = dbschemaatlas:::empty_foreign_keys(),
-    tables_primary_keys = dbschemaatlas:::empty_primary_keys()
+    tables_foreign_keys = db.atlas:::empty_foreign_keys(),
+    tables_primary_keys = db.atlas:::empty_primary_keys()
   )
   model <- build_schema_model(metadata)
   expect_equal(nrow(model_tables(model)), 0L)

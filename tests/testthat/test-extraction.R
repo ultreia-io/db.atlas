@@ -8,7 +8,7 @@ test_that("extraction orchestrates packaged SQL through dbiutils-compatible dele
     tables_primary_keys = data.frame(schema_name = "public", table_name = "child", column_name = "id", position = 1L)
   )
   index <- 0L
-  result <- dbschemaatlas:::extract_schema_metadata_impl(
+  result <- db.atlas:::extract_schema_metadata_impl(
     "public", function() "connection",
     with_connection = function(provider, code) code(provider()),
     query = function(connection, sql, params) {
@@ -27,7 +27,7 @@ test_that("public extraction explicitly delegates to dbiutils", {
   code <- paste(deparse(body(extract_schema_metadata)), collapse = " ")
   expect_match(code, "dbiutils::with_db_connection", fixed = TRUE)
   expect_match(code, "dbiutils::db_query", fixed = TRUE)
-  sql_code <- paste(deparse(body(dbschemaatlas:::read_atlas_sql)), collapse = " ")
+  sql_code <- paste(deparse(body(db.atlas:::read_atlas_sql)), collapse = " ")
   expect_match(sql_code, "dbiutils::read_sql_file", fixed = TRUE)
   expect_error(extract_schema_metadata(character(), identity), "non-empty")
 })

@@ -1,9 +1,9 @@
 ---
-title: "Getting started with dbschemaatlas"
+title: "Getting started with db.atlas"
 description: Extract, persist, inspect, and document database schemas.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting started with dbschemaatlas}
+  %\VignetteIndexEntry{Getting started with db.atlas}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,7 +12,7 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-`dbschemaatlas` keeps connection credentials, database drivers, and branding
+`db.atlas` keeps connection credentials, database drivers, and branding
 in the consuming application. Its documentation builds entirely from the
 packaged offline fixture.
 
@@ -40,8 +40,8 @@ delegated to `dbiutils`.
 ## Save and load metadata offline
 
 ```{r offline}
-library(dbschemaatlas)
-fixture <- system.file("extdata", "example-metadata", package = "dbschemaatlas")
+library(db.atlas)
+fixture <- system.file("extdata", "example-metadata", package = "db.atlas")
 metadata <- read_metadata(fixture)
 snapshot <- file.path(tempdir(), "atlas-snapshot")
 write_metadata(metadata, snapshot)

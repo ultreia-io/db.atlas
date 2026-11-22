@@ -8,7 +8,7 @@ test_that("multilingual and untagged descriptions are parsed", {
 
 test_that("anchors and rendered report content escape HTML", {
   expect_equal(atlas_anchor("My schema", "x.y"), "my_schema_x_y")
-  expect_match(dbschemaatlas:::escape_html("<script>"), "&lt;script&gt;", fixed = TRUE)
-  body <- dbschemaatlas:::build_report_body(build_schema_model(fixture_metadata()), atlas_report_config(), Sys.time())
+  expect_match(db.atlas:::escape_html("<script>"), "&lt;script&gt;", fixed = TRUE)
+  body <- db.atlas:::build_report_body(build_schema_model(fixture_metadata()), atlas_report_config(), Sys.time())
   expect_false(grepl("<script>", body, fixed = TRUE))
 })

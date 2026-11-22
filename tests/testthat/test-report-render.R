@@ -24,7 +24,7 @@ test_that("template overrides are honored", {
   writeLines(c("---", "title: '{{title}}'", "output: html_document", "---", "CUSTOM", "{{{body}}}"), template)
   writeLines("body { color: black; }", style)
   config <- atlas_report_config(template_overrides = list(report = template, style = style))
-  expect_equal(dbschemaatlas:::template_path(config, "report", "report.Rmd.tpl"), template)
+  expect_equal(db.atlas:::template_path(config, "report", "report.Rmd.tpl"), template)
 })
 
 test_that("index generation validates roots and handles subdirectories", {

@@ -1,6 +1,6 @@
-# Contributing to dbschemaatlas
+# Contributing to db.atlas
 
-Thank you for considering a contribution to `dbschemaatlas`.
+Thank you for considering a contribution to `db.atlas`.
 
 ## Before opening a change
 

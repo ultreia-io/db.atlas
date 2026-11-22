@@ -52,8 +52,8 @@ jobs:
           expected_tag="v${version}"
           archive="${package}_${version}.tar.gz"
 
-          if [[ "${package}" != "dbschemaatlas" ]]; then
-            echo "::error::Expected package name dbschemaatlas, but found ${package}."
+          if [[ "${package}" != "db.atlas" ]]; then
+            echo "::error::Expected package name db.atlas, but found ${package}."
             exit 1
           fi
 
@@ -137,5 +137,5 @@ jobs:
             "${ARCHIVE}" \
             "${ARCHIVE}.sha256" \
             --verify-tag \
-            --title "dbschemaatlas ${VERSION}" \
+            --title "db.atlas ${VERSION}" \
             --generate-notes

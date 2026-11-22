@@ -6,21 +6,21 @@ output:
 
 <!-- README.md is generated from README.Rmd. Please edit README.Rmd. -->
 
-# dbschemaatlas
+# db.atlas
 
-[![Build](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Build.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Build.yaml?query=branch%3Adevelop)
-[![Test](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Test.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Test.yaml?query=branch%3Adevelop)
-[![Website](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Website.yaml/badge.svg)](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Website.yaml)
-[![Codecov](https://codecov.io/gh/ultreia-io/dbschemaatlas/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ultreia-io/dbschemaatlas/tree/develop)
-[![Latest release](https://img.shields.io/github/v/release/ultreia-io/dbschemaatlas?display_name=tag&sort=semver)](https://github.com/ultreia-io/dbschemaatlas/releases/latest)
-[![License](https://img.shields.io/github/license/ultreia-io/dbschemaatlas)](https://github.com/ultreia-io/dbschemaatlas/blob/main/LICENSE)
+[![Build](https://github.com/ultreia-io/db.atlas/actions/workflows/Build.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/db.atlas/actions/workflows/Build.yaml?query=branch%3Adevelop)
+[![Test](https://github.com/ultreia-io/db.atlas/actions/workflows/Test.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/db.atlas/actions/workflows/Test.yaml?query=branch%3Adevelop)
+[![Website](https://github.com/ultreia-io/db.atlas/actions/workflows/Website.yaml/badge.svg)](https://github.com/ultreia-io/db.atlas/actions/workflows/Website.yaml)
+[![Codecov](https://codecov.io/gh/ultreia-io/db.atlas/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ultreia-io/db.atlas/tree/develop)
+[![Latest release](https://img.shields.io/github/v/release/ultreia-io/db.atlas?display_name=tag&sort=semver)](https://github.com/ultreia-io/db.atlas/releases/latest)
+[![License](https://img.shields.io/github/license/ultreia-io/db.atlas)](https://github.com/ultreia-io/db.atlas/blob/main/LICENSE)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 
-`dbschemaatlas` extracts PostgreSQL catalog metadata, saves portable snapshots,
+`db.atlas` extracts PostgreSQL catalog metadata, saves portable snapshots,
 builds dependency models, and creates neutral offline HTML schema reports.
 Applications provide the database connection and optional branding.
 
-Package website: https://ultreia-io.github.io/dbschemaatlas/
+Package website: https://ultreia-io.github.io/db.atlas/
 
 ## Features
 
@@ -35,7 +35,7 @@ Package website: https://ultreia-io.github.io/dbschemaatlas/
 
 ```r
 install.packages("pak")
-pak::pak("ultreia-io/dbschemaatlas")
+pak::pak("ultreia-io/db.atlas")
 ```
 
 The package declares `dbiutils` through `Remotes`, so GitHub Actions and local
@@ -44,9 +44,9 @@ package installers can resolve it without absolute paths.
 ## Offline usage
 
 ```{r example, message=FALSE}
-library(dbschemaatlas)
+library(db.atlas)
 
-fixture <- system.file("extdata", "example-metadata", package = "dbschemaatlas")
+fixture <- system.file("extdata", "example-metadata", package = "db.atlas")
 metadata <- read_metadata(fixture)
 model <- build_schema_model(metadata)
 model_dependencies(model)

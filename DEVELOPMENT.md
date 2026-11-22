@@ -36,7 +36,7 @@ workflow and uploaded only when `CODECOV_TOKEN` is available.
 
 ## Release
 
-Add an exact `# dbschemaatlas x.y.z` NEWS heading, validate locally, then run
+Add an exact `# db.atlas x.y.z` NEWS heading, validate locally, then run
 the Perform Release workflow from `develop`. The workflow validates one
 immutable commit, merges it to `main`, tags it, merges back to `develop`, and
 starts archive and website publication. Do not manually create release tags.
@@ -46,6 +46,6 @@ For the first release, the workflow creates `main` from the validated release ca
 ## Licensing
 
 The repository owner has confirmed that the incoming ROS implementation was
-never released and authorizes `dbschemaatlas` under LGPL-2.1, matching
+never released and authorizes `db.atlas` under LGPL-2.1, matching
 `dbiutils`. Keep `DESCRIPTION`, `LICENSE`, README, and release metadata
 consistent with that license.

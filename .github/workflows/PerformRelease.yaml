@@ -69,8 +69,8 @@ jobs:
           else
             package=$(awk -F ': *' '$1 == "Package" { print $2; exit }' DESCRIPTION)
 
-            if [[ "${package}" != "dbschemaatlas" ]]; then
-              echo "::error::Expected package name dbschemaatlas, but found ${package}."
+            if [[ "${package}" != "db.atlas" ]]; then
+              echo "::error::Expected package name db.atlas, but found ${package}."
               exit 1
             fi
 
@@ -97,7 +97,7 @@ jobs:
 
             if ! git diff --quiet -- DESCRIPTION; then
               git add DESCRIPTION
-              git commit -m "Prepare dbschemaatlas ${VERSION}"
+              git commit -m "Prepare db.atlas ${VERSION}"
             fi
 
             git push --set-upstream origin \
@@ -107,8 +107,8 @@ jobs:
           package=$(awk -F ': *' '$1 == "Package" { print $2; exit }' DESCRIPTION)
           package_version=$(awk -F ': *' '$1 == "Version" { print $2; exit }' DESCRIPTION)
 
-          if [[ "${package}" != "dbschemaatlas" ]]; then
-            echo "::error::Expected package name dbschemaatlas, but found ${package}."
+          if [[ "${package}" != "db.atlas" ]]; then
+            echo "::error::Expected package name db.atlas, but found ${package}."
             exit 1
           fi
 
@@ -224,7 +224,7 @@ jobs:
             git switch --create main "${RELEASE_SHA}"
           fi
           git tag --annotate "${TAG}" \
-            --message "dbschemaatlas ${VERSION}"
+            --message "db.atlas ${VERSION}"
 
           git switch --force-create develop origin/develop
           git merge --no-ff "${TAG}" \

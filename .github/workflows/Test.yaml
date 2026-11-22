@@ -84,7 +84,7 @@ jobs:
         uses: codecov/codecov-action@v7.0.0
         with:
           token: ${{ env.CODECOV_TOKEN }}
-          slug: ultreia-io/dbschemaatlas
+          slug: ultreia-io/db.atlas
           files: coverage.xml
           disable_search: true
           fail_ci_if_error: true
