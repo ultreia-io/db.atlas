@@ -46,26 +46,42 @@ local package installers can resolve it without absolute paths.
 ``` r
 library(db.atlas)
 
-fixture <- system.file("extdata", "example-metadata", package = "db.atlas")
+fixture <- system.file("examples", "survey", "metadata", package = "db.atlas")
 metadata <- read_metadata(fixture)
 model <- build_schema_model(metadata)
 model_dependencies(model)
 ```
 
-    ##    schema      table           foreign_key              columns target_schema
-    ##    <char>     <char>                <char>               <list>        <char>
-    ## 1: public membership membership_account_fk tenant_id,account_id        public
-    ## 2:  audit      event      event_account_fk tenant_id,account_id        public
-    ##    target_table       target_columns          table_id target_table_id
-    ##          <char>               <list>            <char>          <char>
-    ## 1:      account tenant_id,account_id public.membership  public.account
-    ## 2:      account tenant_id,account_id       audit.event  public.account
+    ##    schema        table               foreign_key
+    ##    <char>       <char>                    <char>
+    ## 1: survey     metadata      metadata_contacts_fk
+    ## 2: survey observations  observations_stations_fk
+    ## 3: survey observations observations_observers_fk
+    ## 4: survey      samples   samples_observations_fk
+    ## 5: survey measurements   measurements_samples_fk
+    ## 6: survey        notes     notes_observations_fk
+    ##                             columns target_schema target_table
+    ##                              <list>        <char>       <char>
+    ## 1:                    contact_email     catalogue     contacts
+    ## 2:                          station     catalogue     stations
+    ## 3:                         observer     catalogue    observers
+    ## 4:           station,observation_id        survey observations
+    ## 5: station,observation_id,sample_no        survey      samples
+    ## 6:           station,observation_id        survey observations
+    ##                      target_columns            table_id     target_table_id
+    ##                              <list>              <char>              <char>
+    ## 1:                            email     survey.metadata  catalogue.contacts
+    ## 2:                             code survey.observations  catalogue.stations
+    ## 3:                             code survey.observations catalogue.observers
+    ## 4:           station,observation_id      survey.samples survey.observations
+    ## 5: station,observation_id,sample_no survey.measurements      survey.samples
+    ## 6:           station,observation_id        survey.notes survey.observations
 
 For live extraction, provide a zero-argument DBI connection provider:
 
 ``` r
 provider <- function() DBI::dbConnect(RPostgres::Postgres(), dbname = "example")
-metadata <- extract_schema_metadata(c("public", "audit"), provider)
+metadata <- extract_schema_metadata(c("survey", "catalogue"), provider)
 write_metadata(metadata, "metadata-snapshot")
 ```
 
@@ -75,7 +91,7 @@ Render an offline report to a caller-selected directory:
 config <- atlas_report_config(
   title = "Example database",
   output_directory = "schema-report",
-  schema_colors = c(public = "#3B82F6", audit = "#F59E0B")
+  schema_colors = c(survey = "#3B82F6", catalogue = "#F59E0B")
 )
 render_schema_report(model, config)
 generate_report_indexes(config$output_directory)

@@ -31,7 +31,7 @@ provider <- function() {
     password = Sys.getenv("ATLAS_PASSWORD")
   )
 }
-metadata <- extract_schema_metadata(c("public", "audit"), provider)
+metadata <- extract_schema_metadata(c("survey", "catalogue"), provider)
 ```
 
 Internally, connection ownership, query execution, and SQL reading are
@@ -41,7 +41,7 @@ delegated to `db.tools`.
 
 ```{r offline}
 library(db.atlas)
-fixture <- system.file("extdata", "example-metadata", package = "db.atlas")
+fixture <- system.file("examples", "survey", "metadata", package = "db.atlas")
 metadata <- read_metadata(fixture)
 snapshot <- file.path(tempdir(), "atlas-snapshot")
 write_metadata(metadata, snapshot)
@@ -54,7 +54,7 @@ model_dependencies(model)
 
 ```{r report, eval=FALSE}
 config <- atlas_report_config(
-  title = "Customer database",
+  title = "Survey database",
   abstract = "Tables and relationships used by the customer service.",
   author = "Data engineering",
   output_directory = "schema-report"
@@ -67,15 +67,15 @@ generate_report_indexes(config$output_directory)
 
 ```{r branding, eval=FALSE}
 config <- atlas_report_config(
-  title = "Customer database",
+  title = "Survey database",
   logo = "brand/logo.png",
   analytics_html = "brand/analytics.html",
-  schemas = c("public", "audit"),
-  schema_groups = list(application = "public", operations = "audit"),
-  schema_colors = c(public = "#2563EB", audit = "#D97706"),
+  schemas = c("survey", "catalogue"),
+  schema_groups = list(records = "survey", references = "catalogue"),
+  schema_colors = c(survey = "#2563EB", catalogue = "#D97706"),
   filename_prefix = "customer_database",
   output_directory = "schema-report",
-  domain_labels = c(public = "Application", audit = "Operations"),
+  domain_labels = c(survey = "Application", catalogue = "Operations"),
   sections = c(columns = TRUE, dependencies = TRUE, usages = TRUE, graphs = TRUE),
   template_overrides = list(report = "brand/report.Rmd.tpl", style = "brand/report.css")
 )
