@@ -1,0 +1,35 @@
+---
+title: "Terminology"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Terminology}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Database metadata
+
+| Term                  | Meaning                                                                         |
+|-----------------------|---------------------------------------------------------------------------------|
+| Schema                | A named namespace for database tables and other objects.                        |
+| Metadata              | Descriptions of schemas, tables, columns and constraints.                       |
+| Connection provider   | A function that opens a DBI connection when called with no arguments.           |
+| Metadata snapshot     | CSV files holding the extracted metadata for offline use.                       |
+| Schema model          | An R object organizing metadata and the relationships between tables.           |
+
+## Keys and relationships
+
+| Term          | Meaning                                                                      |
+|---------------|------------------------------------------------------------------------------|
+| Primary key   | One or more columns that uniquely identify a row.                            |
+| Foreign key   | One or more columns that reference a key in a target table.                  |
+| Dependency    | A foreign key relationship from its source table to the target table.        |
+| Usage         | The same relationship viewed from the target table.                          |
+
+## Documentation
+
+| Term                 | Meaning                                                                 |
+|----------------------|-------------------------------------------------------------------------|
+| Atlas report         | An HTML document describing the modeled schemas and tables.             |
+| Dependency graph     | An interactive diagram of tables and their foreign key relationships.   |
+| Report configuration | The settings for schema selection, presentation and output.             |

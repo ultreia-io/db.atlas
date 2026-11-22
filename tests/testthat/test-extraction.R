@@ -1,4 +1,4 @@
-test_that("extraction orchestrates packaged SQL through dbiutils-compatible delegates", {
+test_that("extraction orchestrates packaged SQL through db.tools-compatible delegates", {
   calls <- character()
   raw <- list(
     schemas_description = data.frame(schema_name = "public", description = "Public"),
@@ -8,7 +8,7 @@ test_that("extraction orchestrates packaged SQL through dbiutils-compatible dele
     tables_primary_keys = data.frame(schema_name = "public", table_name = "child", column_name = "id", position = 1L)
   )
   index <- 0L
-  result <- dbschemaatlas:::extract_schema_metadata_impl(
+  result <- db.atlas:::extract_schema_metadata_impl(
     "public", function() "connection",
     with_connection = function(provider, code) code(provider()),
     query = function(connection, sql, params) {
@@ -23,11 +23,11 @@ test_that("extraction orchestrates packaged SQL through dbiutils-compatible dele
   expect_equal(result$tables_primary_keys$primary_key_columns[[1]], "id")
 })
 
-test_that("public extraction explicitly delegates to dbiutils", {
+test_that("public extraction explicitly delegates to db.tools", {
   code <- paste(deparse(body(extract_schema_metadata)), collapse = " ")
-  expect_match(code, "dbiutils::with_db_connection", fixed = TRUE)
-  expect_match(code, "dbiutils::db_query", fixed = TRUE)
-  sql_code <- paste(deparse(body(dbschemaatlas:::read_atlas_sql)), collapse = " ")
-  expect_match(sql_code, "dbiutils::read_sql_file", fixed = TRUE)
+  expect_match(code, "db.tools::with_db_connection", fixed = TRUE)
+  expect_match(code, "db.tools::db_query", fixed = TRUE)
+  sql_code <- paste(deparse(body(db.atlas:::read_atlas_sql)), collapse = " ")
+  expect_match(sql_code, "db.tools::read_sql_file", fixed = TRUE)
   expect_error(extract_schema_metadata(character(), identity), "non-empty")
 })

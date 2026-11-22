@@ -1,4 +1,4 @@
 library(testthat)
-library(dbschemaatlas)
+library(db.atlas)
 
-test_check("dbschemaatlas")
+test_check("db.atlas")

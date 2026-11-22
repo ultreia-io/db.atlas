@@ -1,0 +1,8 @@
+﻿schema,table,primary_key_columns
+"survey","observations","station|observation_id"
+"survey","samples","station|observation_id|sample_no"
+"survey","measurements","station|observation_id|sample_no|reading_no"
+"survey","equipment","equipment_id"
+"catalogue","stations","code"
+"catalogue","observers","code"
+"catalogue","contacts","email"

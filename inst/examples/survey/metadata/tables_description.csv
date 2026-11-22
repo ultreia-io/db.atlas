@@ -1,0 +1,10 @@
+﻿schema,table,description
+"survey","metadata","Survey submission details and the reporting contact."
+"survey","observations","Measurements and counts recorded by an observer at a station."
+"survey","samples","Numbered samples taken during an observation."
+"survey","measurements","Individual readings recorded for a sample."
+"survey","equipment","Registered survey equipment."
+"survey","notes","Optional notes associated with an observation."
+"catalogue","stations","Survey stations identified by canonical station code."
+"catalogue","observers","Survey observers identified by canonical observer code."
+"catalogue","contacts","Survey reporting contacts identified by email address."

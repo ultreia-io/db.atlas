@@ -1,0 +1,93 @@
+---
+title: "Package resources"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Package resources}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Download the example metadata, PostgreSQL queries and report templates supplied with `db.atlas`.
+
+Use [Getting started](atlas.html) to load the snapshot and [Schema reports](reports.html) to render it.
+
+## Downloads
+
+```{r resources-archive, echo=FALSE, results='asis'}
+# Read the version used in the downloadable archive name.
+resources_version <- as.character(utils::packageVersion("db.atlas"))
+# Offer the versioned archive on the website.
+if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+  cat(sprintf("[Download package resources (%s, ZIP)](../db.atlas-resources-%s.zip).\n\n",
+    resources_version, resources_version))
+}
+```
+
+The archive preserves the directory layout of the installed resources.
+
+```{r resources-tables, include=FALSE}
+# Locate the installed package files.
+resources_directory <- system.file(package = "db.atlas")
+# List the files for one group, with downloads on the website.
+resource_table <- function(directory, descriptions) {
+  files <- list.files(file.path(resources_directory, directory), recursive = TRUE)
+  labels <- sprintf("`%s`", files)
+  if (identical(Sys.getenv("IN_PKGDOWN"), "true")) {
+    # Use absolute download URLs so pkgdown preserves Markdown files as downloads.
+    urls <- paste0("https://ultreia-io.github.io/db.atlas/", directory, "/", files)
+    labels <- sprintf("[`%s`](%s)", files, urls)
+  }
+  knitr::kable(data.frame(File = labels, Purpose = unname(descriptions[files])), format = "pipe")
+}
+```
+
+### Survey example
+
+The snapshot models the sheets and catalogues used in the shared `form.*` survey example.
+
+```{r metadata-files, echo=FALSE, results='asis'}
+# Describe the five CSV components read by read_metadata().
+resource_table("examples/survey", c(
+  "README.md" = "Survey example layout and usage notes.",
+  "metadata/schemas_description.csv" = "Schemas and their descriptions.",
+  "metadata/tables_description.csv" = "Tables and their descriptions.",
+  "metadata/tables_columns.csv" = "Column names, types, nullability and descriptions.",
+  "metadata/tables_foreign_keys.csv" = "Ordered foreign key columns and their targets.",
+  "metadata/tables_primary_keys.csv" = "Ordered primary key columns."
+))
+```
+
+### PostgreSQL queries
+
+```{r sql-files, echo=FALSE, results='asis'}
+# Describe the PostgreSQL catalogue queries used during extraction.
+resource_table("sql", c(
+  "get_schemas_description.sql" = "Read schema descriptions.",
+  "get_tables_description.sql" = "Read table descriptions.",
+  "get_tables_columns.sql" = "Read column metadata and descriptions.",
+  "get_tables_foreign_keys.sql" = "Read foreign key columns and their targets.",
+  "get_tables_primary_keys.sql" = "Read primary key columns."
+))
+```
+
+### Report templates
+
+```{r template-files, echo=FALSE, results='asis'}
+# Describe the defaults used to render reports and graphs.
+resource_table("templates", c(
+  "atlas.css" = "Report styles.",
+  "report.Rmd.tpl" = "R Markdown report template.",
+  "report.js" = "Report interactions.",
+  "graph.css" = "Dependency graph styles.",
+  "graph.js" = "Dependency graph interactions."
+))
+```
+
+## Installed resources
+
+```{r installed-resources}
+# Locate the same example, queries and templates without downloading files.
+system.file("examples", "survey", package = "db.atlas")
+system.file("sql", package = "db.atlas")
+system.file("templates", package = "db.atlas")
+```

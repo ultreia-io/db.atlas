@@ -1,108 +1,87 @@
+# db.atlas
 
-<!-- README.md is generated from README.Rmd. Please edit README.Rmd. -->
+[![Build](https://img.shields.io/github/actions/workflow/status/ultreia-io/db.atlas/Build.yaml?branch=develop&label=Build&logo=githubactions&logoColor=white)](https://github.com/ultreia-io/db.atlas/actions/workflows/Build.yaml?query=branch%3Adevelop)
+[![Website](https://img.shields.io/badge/website-documentation-blue?logo=readthedocs&logoColor=white)](https://ultreia-io.github.io/db.atlas/index.html)
+[![License](https://img.shields.io/badge/license-LGPL--2.1-blue?logo=gnu&logoColor=white)](https://github.com/ultreia-io/db.atlas/blob/main/LICENSE)
 
-# dbschemaatlas
+[![Latest release](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fultreia-io%2Fdb.atlas%2Freleases%2Flatest&query=%24.tag_name&label=Latest%20release&color=blue&logo=github&logoColor=white)](https://github.com/ultreia-io/db.atlas/releases/latest)
+![CRAN release](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcrandb.r-pkg.org%2Fdb.atlas&query=%24.Version&label=CRAN%20release&color=brightgreen&logo=r&logoColor=white)
 
-[![Build](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Build.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Build.yaml?query=branch%3Adevelop)
-[![Test](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Test.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Test.yaml?query=branch%3Adevelop)
-[![Website](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Website.yaml/badge.svg)](https://github.com/ultreia-io/dbschemaatlas/actions/workflows/Website.yaml)
-[![Codecov](https://codecov.io/gh/ultreia-io/dbschemaatlas/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ultreia-io/dbschemaatlas/tree/develop)
-[![Latest
-release](https://img.shields.io/github/v/release/ultreia-io/dbschemaatlas?display_name=tag&sort=semver)](https://github.com/ultreia-io/dbschemaatlas/releases/latest)
-[![License](https://img.shields.io/github/license/ultreia-io/dbschemaatlas)](https://github.com/ultreia-io/dbschemaatlas/blob/main/LICENSE)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Coverage develop](https://img.shields.io/codecov/c/github/ultreia-io/db.atlas/develop?label=coverage%20develop&logo=codecov)](https://app.codecov.io/gh/ultreia-io/db.atlas/tree/develop)
+[![Coverage main](https://img.shields.io/codecov/c/github/ultreia-io/db.atlas/main?label=coverage%20main&logo=codecov)](https://app.codecov.io/gh/ultreia-io/db.atlas/tree/main)
 
-`dbschemaatlas` extracts PostgreSQL catalog metadata, saves portable
-snapshots, builds dependency models, and creates neutral offline HTML
-schema reports. Applications provide the database connection and
-optional branding.
+## About this project
 
-Package website: <https://ultreia-io.github.io/dbschemaatlas/>
+> `db.atlas` turns PostgreSQL schema metadata into dependency models and offline HTML documentation.
+
+Read the [Terminology][terminology] for the concepts used throughout this documentation.
+
+Applications supply a database connection provider for extraction and can save the metadata as a CSV snapshot.
+
+The snapshot carries the schema, table and column descriptions, primary keys and foreign keys.
 
 ## Features
 
-- Ordered simple and composite primary and foreign keys.
-- Cross-schema dependencies and reverse usages.
-- Portable CSV snapshots for offline documentation.
-- Dependency trees and interactive graphs.
-- Configurable titles, schemas, colors, links, logos, analytics,
-  sections, and templates.
-- No database driver, credentials, or application branding in the
-  package.
+**Metadata extraction and snapshots**
+
+- Extract PostgreSQL metadata using an application-supplied DBI connection provider.
+- Preserve ordered primary and foreign key columns, including composite keys.
+- Save and load portable CSV snapshots for offline use.
+
+**Dependency models**
+
+- Inspect schemas, tables, columns, dependencies and reverse usages.
+- Follow relationships across schemas through dependency trees and interactive graphs.
+
+**Reports and descriptions**
+
+- Render HTML reports with configurable schema groups, colors, links and templates.
+- Parse multilingual descriptions and generate SQL to apply stored descriptions to PostgreSQL.
+
+## Related packages
+
+- [db.tools](https://github.com/ultreia-io/db.tools) provides connection handling and SQL execution.
 
 ## Installation
 
+Once available on CRAN, install the latest version:
+
 ``` r
+# Install db.atlas from CRAN.
+install.packages("db.atlas")
+```
+
+Alternatively, install the latest GitHub release:
+
+``` r
+# Install the package installer once.
 install.packages("pak")
-pak::pak("ultreia-io/dbschemaatlas")
+# Install the latest released db.atlas package.
+pak::pak("ultreia-io/db.atlas@*release")
 ```
 
-The package declares `dbiutils` through `Remotes`, so GitHub Actions and
-local package installers can resolve it without absolute paths.
+`pak` downloads the package and installs its dependencies automatically.
 
-## Offline usage
+For the development version:
 
 ``` r
-library(dbschemaatlas)
-
-fixture <- system.file("extdata", "example-metadata", package = "dbschemaatlas")
-metadata <- read_metadata(fixture)
-model <- build_schema_model(metadata)
-model_dependencies(model)
+# Install db.atlas from the development branch.
+pak::pak("ultreia-io/db.atlas@develop")
 ```
 
-    ##    schema      table           foreign_key              columns target_schema
-    ##    <char>     <char>                <char>               <list>        <char>
-    ## 1: public membership membership_account_fk tenant_id,account_id        public
-    ## 2:  audit      event      event_account_fk tenant_id,account_id        public
-    ##    target_table       target_columns          table_id target_table_id
-    ##          <char>               <list>            <char>          <char>
-    ## 1:      account tenant_id,account_id public.membership  public.account
-    ## 2:      account tenant_id,account_id       audit.event  public.account
+## Getting started
 
-For live extraction, provide a zero-argument DBI connection provider:
+Follow [Getting started][getting-started] for the runnable example using a bundled metadata snapshot.
 
-``` r
-provider <- function() DBI::dbConnect(RPostgres::Postgres(), dbname = "example")
-metadata <- extract_schema_metadata(c("public", "audit"), provider)
-write_metadata(metadata, "metadata-snapshot")
-```
+[terminology]: https://ultreia-io.github.io/db.atlas/articles/terminology.html
+[getting-started]: https://ultreia-io.github.io/db.atlas/articles/atlas.html
 
-Render an offline report to a caller-selected directory:
+## Guides
 
-``` r
-config <- atlas_report_config(
-  title = "Example database",
-  output_directory = "schema-report",
-  schema_colors = c(public = "#3B82F6", audit = "#F59E0B")
-)
-render_schema_report(model, config)
-generate_report_indexes(config$output_directory)
-```
+- [Schema reports](https://ultreia-io.github.io/db.atlas/articles/reports.html)
+- [Package resources](https://ultreia-io.github.io/db.atlas/articles/resources.html)
+- [API reference](https://ultreia-io.github.io/db.atlas/reference/index.html)
+- [Contributing][contributing] and [maintenance][maintenance]
 
-## `dbiutils` dependency
-
-The package delegates query execution to `dbiutils::db_query()`,
-connection ownership to `dbiutils::with_db_connection()`, and packaged
-SQL loading to `dbiutils::read_sql_file()`. It does not duplicate those
-helpers and imports no database driver.
-
-## Development
-
-``` r
-devtools::load_all()
-devtools::build_readme()
-devtools::document()
-devtools::test()
-devtools::check()
-pkgdown::build_site()
-```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) and
-[DEVELOPMENT.md](DEVELOPMENT.md).
-
-## License
-
-GNU Lesser General Public License, version 2.1 (LGPL-2.1), matching
-`dbiutils`. See [LICENSE](LICENSE).
+[contributing]: https://ultreia-io.github.io/db.atlas/CONTRIBUTING.html
+[maintenance]: https://ultreia-io.github.io/db.atlas/DEVELOPMENT.html

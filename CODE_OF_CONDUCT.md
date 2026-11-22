@@ -50,7 +50,7 @@ is officially representing the community in public spaces.
 ## Enforcement
 
 Report unacceptable behavior privately through the repository's
-[security advisory form](https://github.com/ultreia-io/dbschemaatlas/security/advisories/new).
+[security advisory form](https://github.com/ultreia-io/db.atlas/security/advisories/new).
 Reports will be reviewed promptly and fairly. Community leaders will respect
 the privacy and security of reporters.
 

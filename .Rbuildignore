@@ -1,13 +1,11 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.Renviron$
 ^\.editorconfig$
 ^\.gitattributes$
 ^\.github$
 ^\.idea$
 ^docs$
 ^LICENSE$
-^README\.Rmd$
 ^README\.html$
 ^CODE_OF_CONDUCT\.md$
 ^CONTRIBUTING\.md$
@@ -19,3 +17,8 @@
 ^cran-comments\.md$
 ^_pkgdown\.yml$
 ^pkgdown$
+^tools$
+^build/(?!vignette\.rds$).*
+^.*\.tar\.gz.*$
+^.*\.Rcheck$
+^lib$

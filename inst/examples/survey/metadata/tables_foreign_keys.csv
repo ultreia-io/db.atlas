@@ -1,0 +1,7 @@
+﻿schema,table,foreign_key,columns,target_schema,target_table,target_columns
+"survey","metadata","metadata_contacts_fk","contact_email","catalogue","contacts","email"
+"survey","observations","observations_stations_fk","station","catalogue","stations","code"
+"survey","observations","observations_observers_fk","observer","catalogue","observers","code"
+"survey","samples","samples_observations_fk","station|observation_id","survey","observations","station|observation_id"
+"survey","measurements","measurements_samples_fk","station|observation_id|sample_no","survey","samples","station|observation_id|sample_no"
+"survey","notes","notes_observations_fk","station|observation_id","survey","observations","station|observation_id"

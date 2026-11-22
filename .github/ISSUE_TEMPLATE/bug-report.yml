@@ -1,11 +1,11 @@
 name: Bug report
-description: Report reproducible incorrect behavior in dbschemaatlas.
+description: Report reproducible incorrect behavior in db.atlas.
 title: "[Bug]: "
 body:
   - type: markdown
     attributes:
       value: |
-        Thank you for helping improve dbschemaatlas. Remove credentials and private
+        Thank you for helping improve db.atlas. Remove credentials and private
         database content from all examples and logs.
 
   - type: textarea
