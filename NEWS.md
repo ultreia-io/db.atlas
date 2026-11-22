@@ -1,4 +1,10 @@
-# dbschemaatlas 0.2.2
+# db.atlas 0.3.0
+
+* Rename the package and repository from dbschemaatlas to db.atlas.
+* Use db.tools for connection, query and SQL-file operations.
+* Add runnable guides, package resource downloads and an S3 reference index.
+
+# db.atlas 0.2.2
 
 - Allow report indexes to omit generated asset directories and their descendants.
 - Add a matching control in the graph details header to hide and restore the panel.
@@ -7,12 +13,12 @@
 - Keep dependency and usage table identifiers on one line, with horizontal scrolling when needed.
 - Start the graph with a narrower, 35% details pane while retaining the resizable divider.
 
-# dbschemaatlas 0.2.1
+# db.atlas 0.2.1
 
 - Display mandatory, primary-key and foreign-key icons beside report column names, with an icon legend.
 - Deploy release websites through develop using the released tag as the site source.
 
-# dbschemaatlas 0.2.0
+# db.atlas 0.2.0
 
 - Restore interactive reports with all rows visible and their natural order preserved.
 - Show missing comments in red, language badges, and quoted schema and table descriptions.
@@ -23,10 +29,10 @@
 - Refine detail tables with unwrapped column names, compact type columns and full-height scrolling.
 - Embed report and graph presentation assets for offline viewing.
 
-# dbschemaatlas 0.1.0
+# db.atlas 0.1.0
 
 - Extract PostgreSQL schema metadata through caller-supplied DBI connections.
 - Save and load portable metadata snapshots with composite-key support.
 - Build dependency and reverse-usage models, trees, graphs, and offline HTML reports.
-- Delegate connection lifecycle, query execution, and SQL loading to `dbiutils`.
-- License the package under LGPL-2.1, matching `dbiutils`.
+- Delegate connection lifecycle, query execution, and SQL loading to `db.tools`.
+- License the package under LGPL-2.1, matching `db.tools`.

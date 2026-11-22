@@ -1,6 +1,6 @@
 Package: db.atlas
 Title: Reusable Database Schema Metadata and Reports
-Version: 0.2.2
+Version: 0.3.0
 Authors@R:
     person("Tony", "Chemit", role = c("aut", "cre"),
            email = "tchemit@users.noreply.github.com")
