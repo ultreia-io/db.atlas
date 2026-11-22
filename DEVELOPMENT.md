@@ -56,9 +56,7 @@ pkgdown::build_site()
 3. Run **Actions → Start Release** on `develop` to open a release pull request.
 4. Wait for its checks to pass, then merge the pull request into `main`.
 
-**Publish Release** checks the merged commit, uploads coverage and publishes the GitHub archive and checksum.
-
-The website workflow runs from `develop` and builds the same release commit.
+**Publish Release** checks the merge commit and publishes its coverage, archive, checksum, and website.
 
 ## License
 

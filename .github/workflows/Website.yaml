@@ -1,6 +1,12 @@
 name: Website
 
 on:
+  # Publish Release supplies the exact released commit.
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
   # Allow a documentation-only deployment for a selected commit or tag.
   workflow_dispatch:
     inputs:

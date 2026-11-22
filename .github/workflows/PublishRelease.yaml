@@ -158,15 +158,14 @@ jobs:
           overwrite_files: false
           generate_release_notes: true
 
-  # The Pages environment allows workflow runs from develop.
+  # Deploy documentation from the same commit once the GitHub release is available.
   website:
     needs: publish
-    runs-on: ubuntu-latest
     permissions:
-      actions: write
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      RELEASE_COMMIT: ${{ needs.publish.outputs.commit }}
-    steps:
-      - name: Start website deployment
-        run: gh workflow run Website.yaml --repo "$GITHUB_REPOSITORY" --ref develop -f ref="$RELEASE_COMMIT"
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/Website.yaml
+    with:
+      ref: ${{ needs.publish.outputs.commit }}
+    secrets: inherit
