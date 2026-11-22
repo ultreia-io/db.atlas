@@ -1,38 +1,50 @@
 url: https://ultreia-io.github.io/db.atlas/
-
 template:
   bootstrap: 5
   light-switch: true
-
 reference:
+  - title: S3 classes
+    contents: [dbschema_metadata-class, dbschema_model-class, atlas_report_config-class]
   - title: Metadata
-    contents: [extract_schema_metadata, write_metadata, read_metadata]
-  - title: Models and dependencies
-    contents: [build_schema_model, model_schemas, model_tables, model_columns, model_dependencies, model_usages, dependency_tree]
-  - title: Reports and graphs
-    contents: [atlas_report_config, dependency_graph_data, dependency_graph, render_schema_report, generate_report_indexes]
-  - title: Descriptions and database updates
-    contents: [parse_description, atlas_anchor, apply_metadata_comments]
-
+    contents: [extract_schema_metadata, read_metadata, write_metadata, parse_description, apply_metadata_comments]
+  - title: Schema models and dependencies
+    contents: [build_schema_model, model_accessors, model_schemas, model_tables, model_columns, model_dependencies, model_usages, dependency_tree]
+  - title: Schema reports
+    contents: [atlas_report_config, render_schema_report, generate_report_indexes, atlas_anchor]
+  - title: Dependency graphs
+    contents: [dependency_graph_data, dependency_graph]
+  - title: Package
+    contents: [db.atlas-package]
 articles:
-  - title: Get started
-    navbar: ~
-    contents:
-      - dbschemaatlas
-
-home:
-  sidebar:
-    structure: [license, citation, authors, dev]
-
+  - title: Guides
+    navbar: Guides
+    contents: [terminology, atlas, reports, resources]
 navbar:
   structure:
-    left: [intro, reference, articles, news, community]
-    right: [coverage, search, github, lightswitch]
+    left: [intro, reference, articles, news, coverage, community]
+    right: [search, github, lightswitch]
   components:
+    articles:
+      text: Articles
+      menu:
+        - text: Terminology
+          href: articles/terminology.html
+        - text: Getting started
+          href: articles/atlas.html
+        - text: Schema reports
+          href: articles/reports.html
+        - text: Package resources
+          href: articles/resources.html
+    coverage:
+      text: Coverage
+      href: https://app.codecov.io/gh/ultreia-io/db.atlas
+    intro:
+      text: Getting started
+      href: articles/atlas.html
     community:
       text: Community
       menu:
-        - text: Contributing guide
+        - text: Contributing
           href: CONTRIBUTING.html
         - text: Maintainer guide
           href: DEVELOPMENT.html
@@ -40,13 +52,16 @@ navbar:
           href: SECURITY.html
         - text: Code of conduct
           href: CODE_OF_CONDUCT.html
-        - text: "---------"
-        - text: Feature request
-          href: https://github.com/ultreia-io/db.atlas/issues/new?template=feature-request.yml
-        - text: Report a bug
-          href: https://github.com/ultreia-io/db.atlas/issues/new?template=bug-report.yml
-        - text: Report a vulnerability
-          href: https://github.com/ultreia-io/db.atlas/security/advisories/new
-    coverage:
-      text: Coverage
-      href: https://app.codecov.io/gh/ultreia-io/db.atlas/tree/develop
+home:
+  sidebar: false
+news:
+  cran_dates: false
+
+footer:
+  structure:
+    left: [company, copyright, license]
+    right: built_with
+  components:
+    company: "[ultreia.io](https://ultreia.io/)"
+    copyright: "· © 2026"
+    license: "· [License: LGPL-2.1](/db.atlas/LICENSE-text.html)"

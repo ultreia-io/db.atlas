@@ -1,0 +1,58 @@
+---
+title: "Schema reports"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Schema reports}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## About this guide
+
+> Create a report and graph from the snapshot used in [Getting started](atlas.html).
+
+## Render the atlas
+
+The report shows columns, foreign key dependencies and reverse usages. Pandoc builds the HTML and graph.
+
+```{r report}
+# Load the report and model functions.
+library(db.atlas)
+# Locate the installed example snapshot.
+metadata_directory <- system.file("examples", "survey", "metadata", package = "db.atlas")
+# Build a model for the example database.
+schema_model <- build_schema_model(read_metadata(metadata_directory))
+# Write the example output to a temporary directory.
+report_directory <- withr::local_tempdir()
+# Configure the title and use stable filenames.
+report_configuration <- atlas_report_config(
+  title = "Survey database",
+  output_directory = report_directory,
+  timestamp_format = ""
+)
+# Generate the HTML report and dependency graph.
+report_path <- render_schema_report(schema_model, report_configuration)
+# Generate the report indexes.
+generate_report_indexes(report_directory)
+# List the HTML files created by the example.
+list.files(dirname(report_path), pattern = "[.]html$")
+```
+
+## Customize the report
+
+Set schema labels and colors in the configuration passed to `render_schema_report()`.
+
+```{r report-options}
+# Assign labels and colors to the example schemas.
+report_configuration <- atlas_report_config(
+  title = "Survey database",
+  output_directory = report_directory,
+  schemas = c("survey", "catalogue"),
+  domain_labels = c(survey = "Survey records", catalogue = "Reference catalogue"),
+  schema_colors = c(survey = "#2563EB", catalogue = "#D97706")
+)
+```
+
+Use `logo`, `analytics_html` and `template_overrides` in `atlas_report_config()` for application-specific presentation.
+
+The default templates and assets are available in [Package resources](resources.html).

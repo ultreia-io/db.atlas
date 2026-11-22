@@ -1,124 +1,87 @@
-
-<!-- README.md is generated from README.Rmd. Please edit README.Rmd. -->
-
 # db.atlas
 
-[![Build](https://github.com/ultreia-io/db.atlas/actions/workflows/Build.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/db.atlas/actions/workflows/Build.yaml?query=branch%3Adevelop)
-[![Test](https://github.com/ultreia-io/db.atlas/actions/workflows/Test.yaml/badge.svg?branch=develop)](https://github.com/ultreia-io/db.atlas/actions/workflows/Test.yaml?query=branch%3Adevelop)
-[![Website](https://github.com/ultreia-io/db.atlas/actions/workflows/Website.yaml/badge.svg)](https://github.com/ultreia-io/db.atlas/actions/workflows/Website.yaml)
-[![Codecov](https://codecov.io/gh/ultreia-io/db.atlas/branch/develop/graph/badge.svg)](https://app.codecov.io/gh/ultreia-io/db.atlas/tree/develop)
-[![Latest
-release](https://img.shields.io/github/v/release/ultreia-io/db.atlas?display_name=tag&sort=semver)](https://github.com/ultreia-io/db.atlas/releases/latest)
-[![License](https://img.shields.io/github/license/ultreia-io/db.atlas)](https://github.com/ultreia-io/db.atlas/blob/main/LICENSE)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![Build](https://img.shields.io/github/actions/workflow/status/ultreia-io/db.atlas/Build.yaml?branch=develop&label=Build&logo=githubactions&logoColor=white)](https://github.com/ultreia-io/db.atlas/actions/workflows/Build.yaml?query=branch%3Adevelop)
+[![Website](https://img.shields.io/badge/website-documentation-blue?logo=readthedocs&logoColor=white)](https://ultreia-io.github.io/db.atlas/index.html)
+[![License](https://img.shields.io/badge/license-LGPL--2.1-blue?logo=gnu&logoColor=white)](https://github.com/ultreia-io/db.atlas/blob/main/LICENSE)
 
-`db.atlas` extracts PostgreSQL catalog metadata, saves portable
-snapshots, builds dependency models, and creates neutral offline HTML
-schema reports. Applications provide the database connection and
-optional branding.
+[![Latest release](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.github.com%2Frepos%2Fultreia-io%2Fdb.atlas%2Freleases%2Flatest&query=%24.tag_name&label=Latest%20release&color=blue&logo=github&logoColor=white)](https://github.com/ultreia-io/db.atlas/releases/latest)
+![CRAN release](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fcrandb.r-pkg.org%2Fdb.atlas&query=%24.Version&label=CRAN%20release&color=brightgreen&logo=r&logoColor=white)
 
-Package website: <https://ultreia-io.github.io/db.atlas/>
+[![Coverage develop](https://img.shields.io/codecov/c/github/ultreia-io/db.atlas/develop?label=coverage%20develop&logo=codecov)](https://app.codecov.io/gh/ultreia-io/db.atlas/tree/develop)
+[![Coverage main](https://img.shields.io/codecov/c/github/ultreia-io/db.atlas/main?label=coverage%20main&logo=codecov)](https://app.codecov.io/gh/ultreia-io/db.atlas/tree/main)
+
+## About this project
+
+> `db.atlas` turns PostgreSQL schema metadata into dependency models and offline HTML documentation.
+
+Read the [Terminology][terminology] for the concepts used throughout this documentation.
+
+Applications supply a database connection provider for extraction and can save the metadata as a CSV snapshot.
+
+The snapshot carries the schema, table and column descriptions, primary keys and foreign keys.
 
 ## Features
 
-- Ordered simple and composite primary and foreign keys.
-- Cross-schema dependencies and reverse usages.
-- Portable CSV snapshots for offline documentation.
-- Dependency trees and interactive graphs.
-- Configurable titles, schemas, colors, links, logos, analytics,
-  sections, and templates.
-- No database driver, credentials, or application branding in the
-  package.
+**Metadata extraction and snapshots**
+
+- Extract PostgreSQL metadata using an application-supplied DBI connection provider.
+- Preserve ordered primary and foreign key columns, including composite keys.
+- Save and load portable CSV snapshots for offline use.
+
+**Dependency models**
+
+- Inspect schemas, tables, columns, dependencies and reverse usages.
+- Follow relationships across schemas through dependency trees and interactive graphs.
+
+**Reports and descriptions**
+
+- Render HTML reports with configurable schema groups, colors, links and templates.
+- Parse multilingual descriptions and generate SQL to apply stored descriptions to PostgreSQL.
+
+## Related packages
+
+- [db.tools](https://github.com/ultreia-io/db.tools) provides connection handling and SQL execution.
 
 ## Installation
 
+Once available on CRAN, install the latest version:
+
 ``` r
+# Install db.atlas from CRAN.
+install.packages("db.atlas")
+```
+
+Alternatively, install the latest GitHub release:
+
+``` r
+# Install the package installer once.
 install.packages("pak")
-pak::pak("ultreia-io/db.atlas")
+# Install the latest released db.atlas package.
+pak::pak("ultreia-io/db.atlas@*release")
 ```
 
-The package declares `db.tools` through `Remotes`, so GitHub Actions and
-local package installers can resolve it without absolute paths.
+`pak` downloads the package and installs its dependencies automatically.
 
-## Offline usage
+For the development version:
 
 ``` r
-library(db.atlas)
-
-fixture <- system.file("examples", "survey", "metadata", package = "db.atlas")
-metadata <- read_metadata(fixture)
-model <- build_schema_model(metadata)
-model_dependencies(model)
+# Install db.atlas from the development branch.
+pak::pak("ultreia-io/db.atlas@develop")
 ```
 
-    ##    schema        table               foreign_key
-    ##    <char>       <char>                    <char>
-    ## 1: survey     metadata      metadata_contacts_fk
-    ## 2: survey observations  observations_stations_fk
-    ## 3: survey observations observations_observers_fk
-    ## 4: survey      samples   samples_observations_fk
-    ## 5: survey measurements   measurements_samples_fk
-    ## 6: survey        notes     notes_observations_fk
-    ##                             columns target_schema target_table
-    ##                              <list>        <char>       <char>
-    ## 1:                    contact_email     catalogue     contacts
-    ## 2:                          station     catalogue     stations
-    ## 3:                         observer     catalogue    observers
-    ## 4:           station,observation_id        survey observations
-    ## 5: station,observation_id,sample_no        survey      samples
-    ## 6:           station,observation_id        survey observations
-    ##                      target_columns            table_id     target_table_id
-    ##                              <list>              <char>              <char>
-    ## 1:                            email     survey.metadata  catalogue.contacts
-    ## 2:                             code survey.observations  catalogue.stations
-    ## 3:                             code survey.observations catalogue.observers
-    ## 4:           station,observation_id      survey.samples survey.observations
-    ## 5: station,observation_id,sample_no survey.measurements      survey.samples
-    ## 6:           station,observation_id        survey.notes survey.observations
+## Getting started
 
-For live extraction, provide a zero-argument DBI connection provider:
+Follow [Getting started][getting-started] for the runnable example using a bundled metadata snapshot.
 
-``` r
-provider <- function() DBI::dbConnect(RPostgres::Postgres(), dbname = "example")
-metadata <- extract_schema_metadata(c("survey", "catalogue"), provider)
-write_metadata(metadata, "metadata-snapshot")
-```
+[terminology]: https://ultreia-io.github.io/db.atlas/articles/terminology.html
+[getting-started]: https://ultreia-io.github.io/db.atlas/articles/atlas.html
 
-Render an offline report to a caller-selected directory:
+## Guides
 
-``` r
-config <- atlas_report_config(
-  title = "Example database",
-  output_directory = "schema-report",
-  schema_colors = c(survey = "#3B82F6", catalogue = "#F59E0B")
-)
-render_schema_report(model, config)
-generate_report_indexes(config$output_directory)
-```
+- [Schema reports](https://ultreia-io.github.io/db.atlas/articles/reports.html)
+- [Package resources](https://ultreia-io.github.io/db.atlas/articles/resources.html)
+- [API reference](https://ultreia-io.github.io/db.atlas/reference/index.html)
+- [Contributing][contributing] and [maintenance][maintenance]
 
-## `db.tools` dependency
-
-The package delegates query execution to `db.tools::db_query()`,
-connection ownership to `db.tools::with_db_connection()`, and packaged
-SQL loading to `db.tools::read_sql_file()`. It does not duplicate those
-helpers and imports no database driver.
-
-## Development
-
-``` r
-devtools::load_all()
-devtools::build_readme()
-devtools::document()
-devtools::test()
-devtools::check()
-pkgdown::build_site()
-```
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) and
-[DEVELOPMENT.md](DEVELOPMENT.md).
-
-## License
-
-GNU Lesser General Public License, version 2.1 (LGPL-2.1), matching
-`db.tools`. See [LICENSE](LICENSE).
+[contributing]: https://ultreia-io.github.io/db.atlas/CONTRIBUTING.html
+[maintenance]: https://ultreia-io.github.io/db.atlas/DEVELOPMENT.html

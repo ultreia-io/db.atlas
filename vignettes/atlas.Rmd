@@ -1,0 +1,66 @@
+---
+title: "Getting started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## About this guide
+
+> Load a metadata snapshot, inspect its relationships and extract metadata from your own PostgreSQL database.
+
+Read the [Terminology](terminology.html) and find the example files in [Package resources](resources.html).
+
+## Load the example metadata
+
+The snapshot models the `form.model` survey form and the reference tables supplied by `form.references`.
+
+```{r metadata}
+# Load the metadata and model functions.
+library(db.atlas)
+# Locate the example snapshot installed with the package.
+metadata_directory <- system.file("examples", "survey", "metadata", package = "db.atlas")
+# Read the schema, table, column and key metadata.
+schema_metadata <- read_metadata(metadata_directory)
+# Build an in-memory model of the schemas and relationships.
+schema_model <- build_schema_model(schema_metadata)
+```
+
+## Inspect dependencies
+
+A dependency records which table holds the foreign key and which table it references.
+
+```{r dependencies}
+# Read the model's foreign key relationships.
+schema_dependencies <- model_dependencies(schema_model)
+# Display the source table, foreign key and target table.
+schema_dependencies[, c("table_id", "foreign_key", "target_table_id"), with = FALSE]
+```
+
+`survey.observations` references the station and observer catalogues.
+
+`survey.samples` references observations by station and observation ID.
+
+Use [Schema reports](reports.html) to render the model as an HTML atlas with a dependency graph.
+
+## Extract a snapshot from PostgreSQL
+
+Supply a zero-argument function that opens a DBI connection. Extraction closes the connection when it finishes.
+
+This example uses the RPostgres driver and reads the connection settings from the environment.
+
+```{r extract-metadata, eval=FALSE}
+# Create a provider that opens a fresh connection when extraction starts.
+connection_provider <- function() {
+  # Use the application's PostgreSQL settings.
+  DBI::dbConnect(RPostgres::Postgres(), dbname = Sys.getenv("PGDATABASE"))
+}
+# Extract the chosen schemas.
+schema_metadata <- extract_schema_metadata(c("survey", "catalogue"), connection_provider)
+# Save the metadata in an application-selected directory for offline use.
+write_metadata(schema_metadata, "metadata-snapshot")
+```
+
+Pass the snapshot directory to `read_metadata()` to build a model in a later session.
