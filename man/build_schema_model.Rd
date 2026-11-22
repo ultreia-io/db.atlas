@@ -7,10 +7,11 @@
 build_schema_model(metadata)
 }
 \arguments{
-\item{metadata}{A metadata list or snapshot directory.}
+\item{metadata}{A metadata list, such as a \link[=dbschema_metadata-class]{dbschema_metadata} object,
+or a snapshot directory.}
 }
 \value{
-A \code{dbschema_model} object.
+A \link[=dbschema_model-class]{dbschema_model} object.
 }
 \description{
 Builds table and column flags, forward dependencies, and reverse usages from

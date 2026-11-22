@@ -7,15 +7,20 @@
 dependency_tree(model, entry_point, max_depth = Inf)
 }
 \arguments{
-\item{model}{A \code{dbschema_model}.}
+\item{model}{A \link[=dbschema_model-class]{dbschema_model} object.}
 
-\item{entry_point}{A \code{schema.table} or \code{schema.table.column} identifier.}
+\item{entry_point}{A \code{schema.table} or \code{schema.table.column} identifier. Both forms
+start at the table.}
 
-\item{max_depth}{Maximum traversal depth.}
+\item{max_depth}{Maximum traversal depth. Use \code{0} for the root alone or \code{Inf}
+for unlimited depth.}
 }
 \value{
-A \code{data.table} describing the traversal.
+A \code{data.table} with one row per visited table. It records the level,
+parent table, direction and foreign key. The \code{path} column describes the
+step from the parent. The root is at level zero.
 }
 \description{
-Traverses both dependencies and reverse usages without revisiting tables.
+Starts at the entry point's table and follows dependencies and reverse usages
+breadth-first. Each table appears once, via the first route that reaches it.
 }

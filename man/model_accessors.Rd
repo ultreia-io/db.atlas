@@ -2,29 +2,13 @@
 % Please edit documentation in R/schema-model.R
 \name{model_accessors}
 \alias{model_accessors}
-\alias{model_schemas}
-\alias{model_tables}
-\alias{model_columns}
-\alias{model_dependencies}
-\alias{model_usages}
 \title{Access schema-model tables}
-\usage{
-model_schemas(model)
-
-model_tables(model)
-
-model_columns(model)
-
-model_dependencies(model)
-
-model_usages(model)
-}
-\arguments{
-\item{model}{A \code{dbschema_model}.}
-}
-\value{
-A copy of the requested \code{data.table}.
-}
 \description{
-Access schema-model tables
+Use the accessors to inspect schemas, tables and columns with their key flags.
+Dependencies describe foreign keys from the source table to the target table.
+Usages describe those same foreign keys from the target table's perspective.
+}
+\seealso{
+\code{\link[=model_schemas]{model_schemas()}}, \code{\link[=model_tables]{model_tables()}}, \code{\link[=model_columns]{model_columns()}},
+\code{\link[=model_dependencies]{model_dependencies()}}, \code{\link[=model_usages]{model_usages()}}
 }
