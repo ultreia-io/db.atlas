@@ -17,11 +17,11 @@ Encoding: UTF-8
 Depends: R (>= 4.0.0)
 Imports: data.table, DBI, DT, db.tools (>= 0.1.0), htmltools, htmlwidgets,
     visNetwork, whisker
-Suggests: covr, knitr, pkgdown, rmarkdown, RSQLite, testthat (>= 3.0.0), withr
+Suggests: knitr, rmarkdown, RSQLite, testthat (>= 3.0.0), withr
 Remotes: ultreia-io/db.tools
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
 Config/testthat/edition: 3
 Config/Needs/coverage: covr, xml2
-Config/Needs/website: pkgdown
+Config/Needs/website: pkgdown, zip
 Config/roxygen2/version: 8.1.1

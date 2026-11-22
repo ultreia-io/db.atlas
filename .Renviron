@@ -1,2 +1,0 @@
-# Avoid remote clock verification during local and automated package checks.
-_R_CHECK_SYSTEM_CLOCK_=false

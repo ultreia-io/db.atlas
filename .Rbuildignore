@@ -1,6 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^\.Renviron$
 ^\.editorconfig$
 ^\.gitattributes$
 ^\.github$
@@ -19,3 +18,8 @@
 ^cran-comments\.md$
 ^_pkgdown\.yml$
 ^pkgdown$
+^tools$
+^build/(?!vignette\.rds$).*
+^.*\.tar\.gz.*$
+^.*\.Rcheck$
+^lib$
